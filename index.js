@@ -78,8 +78,75 @@ function populateDropdown() {
 addBtn.addEventListener('click', saveToLocalStorageAndPopulateDropdown);
 
 populateDropdown();
- 
- // index.js
+
+// timer function
+function startTimer(td5) {
+  let startTime = Date.now(); // Record the start time
+  const timerInterval = setInterval(() => {
+    const elapsedTime = Date.now() - startTime;
+    const formattedTime = formatTime(elapsedTime);
+    td5.textContent = formattedTime;
+  }, 1000); // Update the timer every second (1000 milliseconds)
+  // Store the interval ID in the td5 element's data attribute for later reference
+  td5.dataset.timerInterval = timerInterval;
+}
+
+// Function to format elapsed time in HH:MM:SS format
+function formatTime(milliseconds) {
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+// task table populate
+document.addEventListener("DOMContentLoaded", function() {
+  // This function will run when the DOM is fully loaded
+
+  // Find the user dropdown element
+  const userDropdown = document.getElementById('usrdrpdn');
+  var taskcnt = 1
+  // Find the "Add Task" button and add a click event listener to it
+  const addButton = document.getElementById('add-button');
+  const taskdet = document.getElementById('taskdet');
+  addButton.addEventListener('click', function() {
+      // Get the selected user
+      var user = userDropdown.value;
+      var task = taskdet.value;
+      // Check if the user has selected a value
+      if (user.trim() === "" || task.trim() === "") {
+          alert("please provide all details");
+          return;
+      }
+      // Create a new table row and cell
+      var tr = document.createElement('tr');
+      var td1 = document.createElement('td');
+      td1.className = 'px-4 py-3 text-ms font-semibold border'
+      var td2 = document.createElement('td');
+      td2.className = 'px-4 py-3 text-ms font-semibold border'
+      var td3 = document.createElement('td');
+      td2.className = 'px-4 py-3 text-ms font-semibold border'
+      var td4 = document.createElement('td');
+      td3.className = 'px-4 py-3 text-ms font-semibold border'
+      td4.className = 'px-4 py-3 text-ms font-semibold border'
+      var td5 = document.createElement('td');
+      td5.className = 'timer px-4 py-3 text-ms font-semibold border';
+      td1.textContent = taskcnt;
+      td2.textContent = task;
+      td3.textContent = user;
+      td4.textContent = "In-progress";
+      td5.textContent = "00:00:00";
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tr.appendChild(td3);
+      tr.appendChild(td4);
+      tr.appendChild(td5);
+      taskcnt++;
+      // Add the new row to the table
+      document.getElementById("task-tbl").getElementsByTagName('tbody')[0].appendChild(tr);
+      startTimer(td5);
+  });
+});
 
 // Function to handle form submission
 function handleFormSubmit(event) {

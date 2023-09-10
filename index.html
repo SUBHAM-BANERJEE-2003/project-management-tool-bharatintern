@@ -46,50 +46,43 @@
           <label for="userdropdn" class="flex text-gray-700">Select User:</label>
           <select name="userdropdn" id="usrdrpdn" class="ml-4 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium px-5 py-2.5 text-center inline-flex items-center">
           </select>
-          <label for="taskdropdn" class="flex text-gray-700">Enter status:</label>
+          <label for="taskdet" class="flex text-gray-700">Enter Task:</label>
+        <input
+          id="taskdet"
+          type="text"
+          class="border border-solid rounded-l px-2 py-1 focus:outline-none focus:border-blue-500 ml-4"
+          size="40"
+        />
+          <!-- <label for="taskdropdn" class="flex text-gray-700">Enter status:</label>
           <select name="taskdropdn" id="taskdrpdn" class="ml-4 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium px-1 py-2.5 text-center inline-flex mt-2 items-center">
-            <option value="task-drpdn">task status</option>
-          </select>
-          <div class="mt-2 p-2 flex">
-            <label for="duration" class="flex text-gray-700">Duration:</label>
-            <input
-              id="duration"
-              type="time"
-              class="border border-solid rounded-l px-2 py-1 focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <div class="mt-2 p-2 flex">
-            <label for="dot" class="flex text-gray-700">Date of Task:</label>
-            <input
-              id="dot"
-              type="date"
-              class="border border-solid rounded-l px-2 py-1 focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <button id="addTask" class="addbtn cursor-pointer ml-40 bg-green-600 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-lg border border-solid border-green-600 hover:border-green-700 transition-all duration-300 ease-in-out items-start active:bg-green-900 absolute">
-            ADD TASK
-          </button>
-          <button id="updateTask" class="addbtn cursor-pointer ml-4 bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg border border-solid border-blue-600 hover:border-blue-700 transition-all duration-300 ease-in-out items-start active:bg-blue-900 absolute">
-            UPDATE TASK
-          </button>
+            <option value="started">Started</option>
+            <option value="progress">In-progess</option>
+            <option value="complete">Mark as Completed</option>
+            <option value="deltask">Delete Task</option>
+          </select> -->
         </div>
       </div>
+      <button id="add-button" class="addbtn cursor-pointer ml-4 bg-green-600 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-lg border border-solid border-green-600 hover:border-green-700 transition-all duration-300 ease-in-out items-start active:bg-green-900 mt-3 block">
+        ADD TASK
+      </button>
     <div class="flex-grow border-t border-gray-400 mt-12"></div>
     <section class="container mx-auto p-6 font-mono">
       <div class="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
         <div class="w-full overflow-x-auto">
-          <table class="w-full">
+          <table id="task-tbl" class="task-tbl w-full">
             <thead>
               <tr class="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
                   <th class="px-4 py-3">Task #</th>
+                  <th class="px-4 py-3">Task details</th>
                   <th class="px-4 py-3">User Name</th>
                   <th class="px-4 py-3">Task Status</th>
                   <th class="px-4 py-3">Duration</th>
                   <th class="px-4 py-3">Date</th>
-                  <th class="px-4 py-3">TOTAL DURATION</th>
+                  <th class="px-4 py-3">CHANGE STATUS</th>
               </tr>
             </thead>
-            <!-- Add your table body content here -->
+            <tbody>
+            </tbody>
           </table>
         </div>
       </div>

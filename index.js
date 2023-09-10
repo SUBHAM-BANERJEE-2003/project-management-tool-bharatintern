@@ -79,15 +79,34 @@ addBtn.addEventListener('click', saveToLocalStorageAndPopulateDropdown);
 
 populateDropdown();
 
-// timer function
+function stopTimer(td5) {
+  const timerInterval = td5.dataset.timerInterval;
+  
+  if (timerInterval) {
+    clearInterval(timerInterval); 
+    delete td5.dataset.timerInterval;
+    const elapsedTime = Date.now() - parseInt(td5.dataset.startTime, 10);
+    td5.dataset.elapsedTime = elapsedTime;
+  }
+}
+
 function startTimer(td5) {
-  let startTime = Date.now(); // Record the start time
+  let startTime;
+  let elapsedTime = 0;
+  if (td5.dataset.startTime) {
+    startTime = Date.now() - parseInt(td5.dataset.elapsedTime, 10);
+    elapsedTime = parseInt(td5.dataset.elapsedTime, 10);
+  } else {
+    startTime = Date.now();
+  }
+
   const timerInterval = setInterval(() => {
-    const elapsedTime = Date.now() - startTime;
     const formattedTime = formatTime(elapsedTime);
     td5.textContent = formattedTime;
-  }, 1000); // Update the timer every second (1000 milliseconds)
-  // Store the interval ID in the td5 element's data attribute for later reference
+    elapsedTime += 1000;
+  }, 1000); 
+  td5.dataset.startTime = startTime;
+  td5.dataset.elapsedTime = elapsedTime;
   td5.dataset.timerInterval = timerInterval;
 }
 
@@ -99,6 +118,14 @@ function formatTime(milliseconds) {
   const seconds = totalSeconds % 60;
   return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
+function getTodaysdate(){
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+  today = mm + '/' + dd + '/' + yyyy;
+  return today
+ }
 // task table populate
 document.addEventListener("DOMContentLoaded", function() {
   // This function will run when the DOM is fully loaded
@@ -109,6 +136,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // Find the "Add Task" button and add a click event listener to it
   const addButton = document.getElementById('add-button');
   const taskdet = document.getElementById('taskdet');
+  const today = getTodaysdate()
   addButton.addEventListener('click', function() {
       // Get the selected user
       var user = userDropdown.value;
@@ -131,23 +159,100 @@ document.addEventListener("DOMContentLoaded", function() {
       td4.className = 'px-4 py-3 text-ms font-semibold border'
       var td5 = document.createElement('td');
       td5.className = 'timer px-4 py-3 text-ms font-semibold border';
+      var td6 = document.createElement('td')
+      td6.className = 'px-4 py-3 text-ms font-semibold border';
+      var td7 = document.createElement('td')
+      td7.className = 'px-4 py-3 text-ms font-semibold border';
+var statdrpdn = document.createElement('select');
+statdrpdn.className = 'mt-4 px-4 py-3 text-ms font-semibold border bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 text-center inline-flex items-center';
+
+var changestat = document.createElement('option');
+changestat.value = 'changestat';
+changestat.textContent = 'change stat';
+
+var optionStart = document.createElement('option');
+optionStart.value = 'start';
+optionStart.textContent = 'Start';
+
+var optionStop = document.createElement('option');
+optionStop.value = 'stop';
+optionStop.textContent = 'Stop';
+
+var optionDelete = document.createElement('option');
+optionDelete.value = 'delete';
+optionDelete.textContent = 'Delete';
+
+var optionMarkComplete = document.createElement('option');
+optionMarkComplete.value = 'markComplete';
+optionMarkComplete.textContent = 'Mark as Complete';
+
+statdrpdn.appendChild(changestat);
+statdrpdn.appendChild(optionStart);
+statdrpdn.appendChild(optionStop);
+statdrpdn.appendChild(optionDelete);
+statdrpdn.appendChild(optionMarkComplete);
+
+// Assign the handlestatChange function to the onchange event of the statdrpdn select element
+statdrpdn.addEventListener('change', handlestatChange);
+
+// ... your existing code ...
+
+function handlestatChange(event) {
+    var selectedValue = event.target.value; 
+    switch (selectedValue) {
+        case 'start':
+            startTimer(td5);
+            td4.textContent = "started";
+            changestat.style.display = "none";
+            optionStart.style.display = "none";
+            var optionreStart = document.createElement('option');
+            optionreStart.value = 're-start';
+            optionreStart.textContent = 're-start';
+            statdrpdn.appendChild(optionreStart);
+            break;
+        case 're-start':
+          startTimer(td5);
+          td4.textContent = "In-progress";
+          break;
+        case 'stop':
+            stopTimer(td5);
+            td4.textContent = "In-progress";
+            break;
+        case 'delete':
+          const taskTable = document.getElementById('task-tbl');
+          if (tr.parentNode) {
+              tr.parentNode.removeChild(tr);
+          }
+          break;
+        case 'markComplete':
+            stopTimer(td5);
+            td4.textContent = "Completed"
+            break;
+        default:
+            alert('some problem occured')
+            break;
+    }
+}
+
+
       td1.textContent = taskcnt;
       td2.textContent = task;
       td3.textContent = user;
       td4.textContent = "In-progress";
       td5.textContent = "00:00:00";
+      td6.textContent = today;
       tr.appendChild(td1);
       tr.appendChild(td2);
       tr.appendChild(td3);
       tr.appendChild(td4);
       tr.appendChild(td5);
+      tr.appendChild(td6);
+      tr.appendChild(statdrpdn);
       taskcnt++;
       // Add the new row to the table
       document.getElementById("task-tbl").getElementsByTagName('tbody')[0].appendChild(tr);
-      startTimer(td5);
   });
 });
-
 // Function to handle form submission
 function handleFormSubmit(event) {
   event.preventDefault(); // Prevent the form from submitting the traditional way
@@ -158,7 +263,6 @@ function handleFormSubmit(event) {
 
   const userName = nameInput.value.trim();
   const messageText = messageInput.value.trim();
-
   // Check if both the name and message are not empty
   if (userName !== '' && messageText !== '') {
     // Create a new message element

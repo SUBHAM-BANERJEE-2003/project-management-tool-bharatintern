@@ -55,17 +55,16 @@ function removeFromLocalStorageAndPopulateDropdown() {
 // Add an event listener to the "DELETE USER" button to remove or add a user
 delBtn.addEventListener('click', removeFromLocalStorageAndPopulateDropdown);
 
-// Populate the dropdown when the page loads
+
 populateDropdown();
-// Function to populate the dropdown with values from local storage
+
 function populateDropdown() {
-  // Clear the current options in the dropdown
+  
   userDropdown.innerHTML = '';
 
-  // Retrieve users from local storage
+
   const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
 
-  // Add each user as an option in the dropdown
   storedUsers.forEach((user) => {
     const option = document.createElement('option');
     option.value = user;
@@ -121,32 +120,29 @@ function formatTime(milliseconds) {
 function getTodaysdate(){
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
-  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var mm = String(today.getMonth() + 1).padStart(2, '0');
   var yyyy = today.getFullYear();
   today = mm + '/' + dd + '/' + yyyy;
   return today
  }
 // task table populate
 document.addEventListener("DOMContentLoaded", function() {
-  // This function will run when the DOM is fully loaded
-
-  // Find the user dropdown element
   const userDropdown = document.getElementById('usrdrpdn');
   var taskcnt = 1
-  // Find the "Add Task" button and add a click event listener to it
+
   const addButton = document.getElementById('add-button');
   const taskdet = document.getElementById('taskdet');
   const today = getTodaysdate()
   addButton.addEventListener('click', function() {
-      // Get the selected user
+  
       var user = userDropdown.value;
       var task = taskdet.value;
-      // Check if the user has selected a value
+
       if (user.trim() === "" || task.trim() === "") {
           alert("please provide all details");
           return;
       }
-      // Create a new table row and cell
+
       var tr = document.createElement('tr');
       var td1 = document.createElement('td');
       td1.className = 'px-4 py-3 text-ms font-semibold border'
@@ -165,7 +161,8 @@ document.addEventListener("DOMContentLoaded", function() {
       td7.className = 'px-4 py-3 text-ms font-semibold border';
 var statdrpdn = document.createElement('select');
 statdrpdn.className = 'mt-4 px-4 py-3 text-ms font-semibold border bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 text-center inline-flex items-center';
-
+var statbar = document.createElement("span");
+statbar.className = "px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-sm";
 var changestat = document.createElement('option');
 changestat.value = 'changestat';
 changestat.textContent = 'change stat';
@@ -192,17 +189,16 @@ statdrpdn.appendChild(optionStop);
 statdrpdn.appendChild(optionDelete);
 statdrpdn.appendChild(optionMarkComplete);
 
-// Assign the handlestatChange function to the onchange event of the statdrpdn select element
 statdrpdn.addEventListener('change', handlestatChange);
 
-// ... your existing code ...
-
 function handlestatChange(event) {
-    var selectedValue = event.target.value; 
+    var selectedValue = event.target.value;
+    alert("Are you sure?") 
     switch (selectedValue) {
         case 'start':
             startTimer(td5);
-            td4.textContent = "started";
+            statbar.className = "px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm";
+            statbar.textContent = "started";
             changestat.style.display = "none";
             optionStart.style.display = "none";
             var optionreStart = document.createElement('option');
@@ -212,11 +208,13 @@ function handlestatChange(event) {
             break;
         case 're-start':
           startTimer(td5);
-          td4.textContent = "In-progress";
+          statbar.className = "px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-200 rounded-sm";
+          statbar.textContent = "Pending";
           break;
         case 'stop':
             stopTimer(td5);
-            td4.textContent = "In-progress";
+            statbar.className = "px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-200 rounded-sm";
+            statbar.textContent = "Pending";
             break;
         case 'delete':
           const taskTable = document.getElementById('task-tbl');
@@ -226,7 +224,8 @@ function handlestatChange(event) {
           break;
         case 'markComplete':
             stopTimer(td5);
-            td4.textContent = "Completed"
+            statbar.className = "px-2 py-1 font-semibold leading-tight text-green-900 bg-green-600 rounded-sm";
+            statbar.textContent = "Completed";
             break;
         default:
             alert('some problem occured')
@@ -238,12 +237,13 @@ function handlestatChange(event) {
       td1.textContent = taskcnt;
       td2.textContent = task;
       td3.textContent = user;
-      td4.textContent = "In-progress";
+      statbar.textContent = "Not Started";
       td5.textContent = "00:00:00";
       td6.textContent = today;
       tr.appendChild(td1);
       tr.appendChild(td2);
       tr.appendChild(td3);
+      td4.appendChild(statbar);
       tr.appendChild(td4);
       tr.appendChild(td5);
       tr.appendChild(td6);
